@@ -181,3 +181,7 @@ The comparison leads to a clear platform strategy:
 For dual-platform delivery, Flutter is the recommended solution because it consolidates product behaviour, UI, state, and most testing into one codebase. SwiftUI and Compose remain valuable reference implementations for native conventions and platform-specific validation. When Flutter needs a native capability, add the smallest required Swift or Kotlin integration instead of maintaining the entire feature twice.
 
 See [CODEBASE_COMPARISON.md](CODEBASE_COMPARISON.md) for the detailed technical assessment.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
