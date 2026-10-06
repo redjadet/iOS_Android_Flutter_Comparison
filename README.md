@@ -1,5 +1,7 @@
 # iOS, Android & Flutter Comparison
 
+[![CI](https://github.com/redjadet/iOS_Android_Flutter_Comparison/actions/workflows/ci.yml/badge.svg)](https://github.com/redjadet/iOS_Android_Flutter_Comparison/actions/workflows/ci.yml)
+
 A focused comparison of the same simple application implemented with SwiftUI, Jetpack Compose, and Flutter.
 
 This repository is not a production application or starter template. Its purpose is to make the engineering trade-offs visible: native platform fidelity versus shared implementation, duplicated work versus feature parity, and platform-specific tooling versus one cross-platform workflow.
@@ -69,7 +71,7 @@ Run the same sample on iOS and Android to evaluate shared behaviour and platform
 - The native Android sample targets API 36 with `minSdk` 33. The native iOS sample declares an iOS 26 deployment target. These values describe this repository, not general framework requirements.
 - The Flutter directory contains mobile, web, and desktop runners. This comparison recommends Flutter specifically for shared iOS and Android delivery; the additional runners are outside the demonstrated scope.
 - State is local and in memory. The repository does not compare networking, persistence, authentication, dependency injection, or large-scale modular architecture.
-- Product-level automated coverage is not part of the current comparison. A successful build confirms compilation, not complete parity or release readiness.
+- CI runs `flutter analyze` / `flutter test` and `./gradlew :app:assembleDebug` on GitHub-hosted Ubuntu. A native iOS simulator job is not included: the Xcode project targets iOS 26.0 and only has user-specific schemes under `xcuserdata/`, which is not a reliable match for hosted macOS runners. Build iOS locally with Xcode. A green CI run confirms those checks, not complete parity or release readiness.
 
 Current upstream context, checked 27 July 2026: Flutter documentation reflects Flutter 3.44.7 and lists Android API 24-37 and iOS 13-26 as supported framework deployment ranges. Application targets can be stricter. [Flutter supported platforms](https://docs.flutter.dev/reference/supported-platforms) · [Flutter release notes](https://docs.flutter.dev/release/release-notes)
 

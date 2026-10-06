@@ -1062,12 +1062,7 @@ class _TaskListPlaygroundPageState extends State<TaskListPlaygroundPage> {
           shrinkWrap: true,
           buildDefaultDragHandles: false,
           itemCount: tasks.length,
-          onReorder: (oldIndex, newIndex) {
-            if (oldIndex < newIndex) {
-              newIndex -= 1;
-            }
-            onMove(oldIndex, newIndex);
-          },
+          onReorderItem: onMove,
           itemBuilder: (context, index) {
             final task = tasks[index];
             return _TaskTile(

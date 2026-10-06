@@ -1,0 +1,52 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode user state
+**/xcuserdata/
+**/*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Android / IntelliJ
+**/.idea/
+*.iml
+*.ipr
+*.iws
+**/.gradle/
+**/local.properties
+**/captures/
+**/.externalNativeBuild/
+**/.cxx/
+
+# Build outputs
+**/build/
+**/Build/
+**/out/
+**/.dart_tool/
+**/.pub-cache/
+**/.pub/
+**/coverage/
+
+# Flutter / Dart generated
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/Flutter/ephemeral/
+**/Generated.xcconfig
+**/flutter_export_environment.sh
+**/ServiceDefinitions.json
+
+# Misc
+*.log
+*.swp
+*~
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
