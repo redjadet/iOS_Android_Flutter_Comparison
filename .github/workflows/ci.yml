@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  flutter:
+    name: Flutter analyze & test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: flutterProject/flutter_conversation_project
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+
+  android:
+    name: Android assembleDebug
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: AndroidProject
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - uses: android-actions/setup-android@v4
+
+      - name: Install Android SDK platform 36
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Assemble debug APK
+        run: ./gradlew :app:assembleDebug --no-daemon
+
+  # Native iOS simulator CI is intentionally omitted.
+  # The Xcode project targets iOS 26.0 and only has user-specific schemes
+  # under xcuserdata/ (no shared .xcscheme). Hosted macOS runners are not a
+  # reliable match for that toolchain, so iOS remains a local Xcode build.
