@@ -51,7 +51,30 @@ jobs:
       - name: Assemble debug APK
         run: ./gradlew :app:assembleDebug --no-daemon
 
-  # Native iOS simulator CI is intentionally omitted.
-  # The Xcode project targets iOS 26.0 and only has user-specific schemes
-  # under xcuserdata/ (no shared .xcscheme). Hosted macOS runners are not a
-  # reliable match for that toolchain, so iOS remains a local Xcode build.
+  kmp-android:
+    name: KMP Android assembleDebug
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: KmpProject
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - uses: android-actions/setup-android@v4
+
+      - name: Install Android SDK platform 36
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - name: Assemble KMP debug APK
+        run: ./gradlew :androidApp:assembleDebug --no-daemon
+
+  # Native iOS and KMP iOS simulator CI are intentionally omitted.
+  # SwiftUI targets iOS 26.0 with user-specific schemes only; KMP iOS embeds
+  # a shared framework via Xcode. Hosted macOS runners are not a reliable
+  # match, so iOS remains a local Xcode build for both.

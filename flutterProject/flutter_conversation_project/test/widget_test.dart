@@ -7,7 +7,8 @@ void main() {
     await tester.pumpWidget(const SamplesApp());
     await tester.pumpAndSettle();
 
-    expect(find.text('SwiftUI Samples'), findsOneWidget);
+    expect(find.text('Flutter Samples'), findsOneWidget);
+    expect(find.text('Why Flutter'), findsOneWidget);
     expect(find.text('Try a Sample'), findsOneWidget);
     expect(find.byType(CupertinoListSection), findsWidgets);
   });
