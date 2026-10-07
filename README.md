@@ -1,5 +1,7 @@
 # iOS, Android & Flutter Comparison
 
+[![CI](https://github.com/redjadet/iOS_Android_Flutter_Comparison/actions/workflows/ci.yml/badge.svg)](https://github.com/redjadet/iOS_Android_Flutter_Comparison/actions/workflows/ci.yml)
+
 Side-by-side implementations of the same sample app in **SwiftUI**, **Jetpack Compose**, and **Flutter**—so delivery cost, reuse, and platform trade-offs stay visible.
 
 Not a production starter. Purpose: show when native specialization wins, and when one shared codebase is the better engineering choice.
@@ -75,7 +77,7 @@ Run the same sample on iOS and Android from one Dart tree. Optional web/desktop 
 - The native Android sample targets API 36 with `minSdk` 33. The native iOS sample declares an iOS 26 deployment target. These values describe this repository, not general framework requirements.
 - The Flutter package includes mobile, web, and desktop runners. Primary comparison focus is shared iOS + Android delivery; extra runners illustrate Flutter’s broader multi-platform reach from the same app.
 - State is local and in memory. The repository does not compare networking, persistence, authentication, dependency injection, or large-scale modular architecture.
-- Product-level automated coverage is not part of the current comparison. A successful build confirms compilation, not complete parity or release readiness.
+- CI runs `flutter analyze` / `flutter test` and `./gradlew :app:assembleDebug` on GitHub-hosted Ubuntu. A native iOS simulator job is not included: the Xcode project targets iOS 26.0 and only has user-specific schemes under `xcuserdata/`, which is not a reliable match for hosted macOS runners. Build iOS locally with Xcode. A green CI run confirms those checks, not complete parity or release readiness.
 
 Current upstream context, checked 27 July 2026: Flutter documentation reflects Flutter 3.44.7 and lists Android API 24-37 and iOS 13-26 as supported framework deployment ranges. Application targets can be stricter. [Flutter supported platforms](https://docs.flutter.dev/reference/supported-platforms) · [Flutter release notes](https://docs.flutter.dev/release/release-notes)
 
@@ -189,3 +191,7 @@ Clear platform strategy:
 For multi-platform delivery, Flutter consolidates behaviour, UI, state, and most tests into one codebase. SwiftUI and Compose stay valuable as native references. When Flutter needs a native API, add the smallest Swift/Kotlin boundary—do not rebuild the whole feature twice.
 
 See [CODEBASE_COMPARISON.md](CODEBASE_COMPARISON.md) for the detailed technical assessment.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
