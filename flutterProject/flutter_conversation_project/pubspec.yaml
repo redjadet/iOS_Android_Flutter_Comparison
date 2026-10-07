@@ -1,5 +1,5 @@
 name: flutter_conversation_project
-description: "A new Flutter project."
+description: Shared Flutter sample app used to compare multi-platform delivery against native SwiftUI and Jetpack Compose.
 publish_to: "none"
 version: 0.1.0
 

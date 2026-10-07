@@ -18,9 +18,8 @@ class SamplesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoApp(
       debugShowCheckedModeBanner: false,
-      title: 'SwiftUI Samples',
+      title: 'Flutter Samples',
       theme: const CupertinoThemeData(
-        brightness: Brightness.light,
         primaryColor: CupertinoColors.activeBlue,
         barBackgroundColor: CupertinoColors.systemGroupedBackground,
         scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
@@ -29,13 +28,13 @@ class SamplesApp extends StatelessWidget {
             inherit: true,
             fontSize: 16,
             letterSpacing: -0.2,
-            color: CupertinoColors.black,
+            color: CupertinoColors.label,
           ),
           navTitleTextStyle: TextStyle(
             inherit: false,
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: CupertinoColors.black,
+            color: CupertinoColors.label,
           ),
         ),
       ),
@@ -58,12 +57,16 @@ class SamplesHomePage extends StatelessWidget {
     final theme = CupertinoTheme.of(context);
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text('SwiftUI Samples'),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          onPressed: () => _showTipsSheet(context),
-          minimumSize: Size(0, 0),
-          child: const Icon(CupertinoIcons.lightbulb),
+        middle: const Text('Flutter Samples'),
+        trailing: Semantics(
+          button: true,
+          label: 'Open Flutter tips',
+          child: CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => _showTipsSheet(context),
+            minimumSize: Size.zero,
+            child: const Icon(CupertinoIcons.lightbulb),
+          ),
         ),
       ),
       child: SafeArea(
@@ -73,10 +76,37 @@ class SamplesHomePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             children: [
               CupertinoListSection.insetGrouped(
-                header: const Text(
+                header: Text(
+                  'Why Flutter',
+                  style: TextStyle(
+                    color: CupertinoColors.secondaryLabel.resolveFrom(context),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                hasLeading: false,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: Text(
+                      'One Dart codebase delivers these samples to iOS and Android. Native stacks need two apps, two languages, and ongoing parity work for the same surface.',
+                      style: theme.textTheme.textStyle.copyWith(
+                        color: CupertinoColors.label.resolveFrom(context),
+                        fontSize: 14,
+                        height: 1.4,
+                      ),
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
+              CupertinoListSection.insetGrouped(
+                header: Text(
                   'Try a Sample',
                   style: TextStyle(
-                    color: CupertinoColors.black,
+                    color: CupertinoColors.secondaryLabel.resolveFrom(context),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -92,10 +122,10 @@ class SamplesHomePage extends StatelessWidget {
                     .toList(),
               ),
               CupertinoListSection.insetGrouped(
-                header: const Text(
+                header: Text(
                   'About',
                   style: TextStyle(
-                    color: CupertinoColors.black,
+                    color: CupertinoColors.secondaryLabel.resolveFrom(context),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -107,9 +137,9 @@ class SamplesHomePage extends StatelessWidget {
                       vertical: 12,
                     ),
                     child: Text(
-                      'Browse a handful of common SwiftUI patterns. Each screen focuses on a different building block that you can adapt in your own projects.',
+                      'Browse common Flutter UI patterns—gradients, forms, animation, lists, and adaptive layouts. Each screen is a reusable building block you can ship across platforms from one implementation.',
                       style: theme.textTheme.textStyle.copyWith(
-                        color: CupertinoColors.black,
+                        color: CupertinoColors.label.resolveFrom(context),
                         fontSize: 14,
                         height: 1.4,
                       ),
@@ -139,11 +169,11 @@ class SamplesHomePage extends StatelessWidget {
             child: CupertinoPageScaffold(
               backgroundColor: background,
               navigationBar: CupertinoNavigationBar(
-                middle: const Text('SwiftUI Tips'),
+                middle: const Text('Flutter Tips'),
                 trailing: CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () => Navigator.of(sheetContext).maybePop(),
-                  minimumSize: Size(0, 0),
+                  minimumSize: Size.zero,
                   child: const Text('Done'),
                 ),
               ),
@@ -154,32 +184,32 @@ class SamplesHomePage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     children: const [
                       _TipsSection(
-                        title: 'Previews',
+                        title: 'Multi-platform',
                         tips: [
-                          _Tip(
-                            icon: CupertinoIcons.play_circle,
-                            text:
-                                'Use the resume button to refresh a preview quickly.',
-                          ),
                           _Tip(
                             icon: CupertinoIcons.device_phone_portrait,
                             text:
-                                'Switch devices from the Preview canvas toolbar.',
+                                'Run the same Dart UI on iOS and Android without rewriting screens.',
+                          ),
+                          _Tip(
+                            icon: CupertinoIcons.square_stack_3d_up,
+                            text:
+                                'Share widgets, state, navigation, and tests instead of maintaining two native apps.',
                           ),
                         ],
                       ),
                       _TipsSection(
-                        title: 'Layout',
+                        title: 'Workflow',
                         tips: [
+                          _Tip(
+                            icon: CupertinoIcons.arrow_2_circlepath,
+                            text:
+                                'Hot reload updates the UI in place so you can iterate without losing app state.',
+                          ),
                           _Tip(
                             icon: CupertinoIcons.square_grid_2x2,
                             text:
-                                'Stacks and spacers are the backbone of most layouts.',
-                          ),
-                          _Tip(
-                            icon: CupertinoIcons.rectangle_expand_vertical,
-                            text:
-                                'ContainerRelativeFrame helps with scrollable hero sections.',
+                                'Compose layouts from reusable widgets—Rows, Columns, and Slivers scale cleanly.',
                           ),
                         ],
                       ),
@@ -204,36 +234,42 @@ class _DemoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = CupertinoTheme.of(context);
-    return CupertinoListTile.notched(
-      onTap: onTap,
-      leading: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: theme.primaryColor,
-          borderRadius: BorderRadius.circular(12),
+    final label = CupertinoColors.label.resolveFrom(context);
+    final secondary = CupertinoColors.secondaryLabel.resolveFrom(context);
+    return Semantics(
+      button: true,
+      label: '${demo.title}. ${demo.subtitle}',
+      child: CupertinoListTile.notched(
+        onTap: onTap,
+        leading: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: theme.primaryColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          alignment: Alignment.center,
+          child: Icon(demo.icon, color: CupertinoColors.white),
         ),
-        alignment: Alignment.center,
-        child: Icon(demo.icon, color: CupertinoColors.white),
-      ),
-      title: Text(
-        demo.title,
-        style: theme.textTheme.textStyle.copyWith(
-          fontWeight: FontWeight.w600,
-          color: CupertinoColors.black,
+        title: Text(
+          demo.title,
+          style: theme.textTheme.textStyle.copyWith(
+            fontWeight: FontWeight.w600,
+            color: label,
+          ),
         ),
-      ),
-      subtitle: Text(
-        demo.subtitle,
-        style: theme.textTheme.textStyle.copyWith(
-          color: CupertinoColors.black,
-          fontSize: 14,
+        subtitle: Text(
+          demo.subtitle,
+          style: theme.textTheme.textStyle.copyWith(
+            color: secondary,
+            fontSize: 14,
+          ),
         ),
-      ),
-      trailing: const Icon(
-        CupertinoIcons.chevron_forward,
-        size: 18,
-        color: CupertinoColors.systemGrey3,
+        trailing: Icon(
+          CupertinoIcons.chevron_forward,
+          size: 18,
+          color: CupertinoColors.tertiaryLabel.resolveFrom(context),
+        ),
       ),
     );
   }
@@ -308,7 +344,7 @@ class _TipRow extends StatelessWidget {
           child: Text(
             tip.text,
             style: theme.textTheme.textStyle.copyWith(
-              color: CupertinoColors.black,
+              color: CupertinoColors.label.resolveFrom(context),
             ),
           ),
         ),
@@ -1062,10 +1098,7 @@ class _TaskListPlaygroundPageState extends State<TaskListPlaygroundPage> {
           shrinkWrap: true,
           buildDefaultDragHandles: false,
           itemCount: tasks.length,
-          onReorder: (oldIndex, newIndex) {
-            if (oldIndex < newIndex) {
-              newIndex -= 1;
-            }
+          onReorderItem: (oldIndex, newIndex) {
             onMove(oldIndex, newIndex);
           },
           itemBuilder: (context, index) {

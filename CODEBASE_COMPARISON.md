@@ -6,7 +6,7 @@
 
 **Decision context:** choosing one implementation strategy for iOS, Android, or both.
 
-**Recommendation:** use native UI for a single-platform product; use **Flutter when both iOS and Android must be supported**.
+**Recommendation:** use native UI for a single-platform product; use **Flutter when you must develop and deploy across multiple platforms** (especially iOS + Android).
 
 ## Executive Summary
 
@@ -14,7 +14,7 @@ This repository implements the same small interaction set three times:
 
 - [SwiftUI](iosSwiftUITest/Test/) for native iOS.
 - [Jetpack Compose](AndroidProject/) for native Android.
-- [Flutter](flutterProject/flutter_conversation_project/) for a shared iOS and Android codebase.
+- [Flutter](flutterProject/flutter_conversation_project/) for the shared multi-platform codebase.
 
 The examples cover navigation, gradients, forms, animation, task management, an adaptive grid, and a tips sheet. They use local in-memory state and deliberately simple file structures. This is a framework comparison, not a production architecture benchmark.
 
@@ -24,9 +24,9 @@ The decision is straightforward:
 |---|---|---|
 | iOS only | **SwiftUI** | Direct Apple-framework access and native iOS conventions |
 | Android only | **Jetpack Compose** | Direct Android/AndroidX access and native Android conventions |
-| iOS and Android | **Flutter** | One shared feature implementation, one primary language, and one parity surface |
+| Multiple platforms (iOS + Android, optional web/desktop) | **Flutter** | One shared feature implementation, one primary language, one parity surface |
 
-When both platforms are required, Flutter provides the best solution for this repository's goals. SwiftUI and Compose would require two product implementations, two state paths, and repeated feature-parity work. Flutter keeps the product surface shared while preserving access to Swift or Kotlin for the smaller set of capabilities that genuinely require native integration.
+When multiple platforms are required, Flutter is the best fit for this repository’s goals. SwiftUI + Compose means two product implementations, two state paths, and repeated parity work. Flutter keeps the product surface shared and reserves Swift/Kotlin for the smaller set of capabilities that truly need native integration.
 
 ## Scope and Method
 
@@ -63,7 +63,7 @@ No device, performance, or end-to-end benchmark was run for this document. Repos
 | Navigation | `NavigationStack` | `NavHost` / `NavController` | `CupertinoApp` / `CupertinoPageRoute` |
 | Local state | `@State` | `remember`, `rememberSaveable`, state lists | `StatefulWidget`, `setState`, `AnimationController` |
 | Modal presentation | `.sheet` | `ModalBottomSheet` | `showCupertinoModalPopup` |
-| Explicit accessibility evidence | Labels and identifiers on key elements | Content descriptions on interactive icons | No explicit `Semantics` widget found |
+| Explicit accessibility evidence | Labels and identifiers on key elements | Content descriptions on interactive icons | Semantics on home demo tiles and tips entry |
 | Product behaviour tests | None found | Template tests only | None found |
 
 Line counts describe the current files; they are not a quality score. Flutter's primary file is the largest individual file, but the equivalent SwiftUI and Compose files total 1,898 lines. More importantly, a real dual-platform native solution requires ongoing changes in two implementations, while Flutter keeps the shared feature in one place.
@@ -73,9 +73,9 @@ Line counts describe the current files; they are not a quality score. Flutter's 
 - The SwiftUI reference declares an iOS 26 deployment target.
 - The Android project uses `compileSdk = 36`, `targetSdk = 36`, and `minSdk = 33`.
 - The Android project pins Kotlin 2.0.21 and Compose BOM 2024.09.00.
-- `navigation-compose:2.8.0` is declared through the version catalogue and again directly in the Android module. The duplicate should be removed during Android build-file maintenance.
+- Navigation Compose is declared once through the version catalogue.
 - The Flutter package uses Dart `^3.9.2`.
-- Flutter host runners exist for mobile, web, and desktop. This comparison evaluates the shared iOS and Android case.
+- Flutter host runners exist for mobile, web, and desktop. Primary evaluation is shared iOS + Android; extra runners support the multi-platform delivery argument.
 
 These are repository settings, not recommended minimums for every application.
 
@@ -122,15 +122,16 @@ The Compose implementation expresses the same samples through Kotlin, Material 3
 
 ### Flutter
 
-The Flutter implementation reproduces the complete sample in one Dart application. It uses Cupertino widgets because the source experience is iOS-oriented, but the same code runs through Flutter's iOS and Android embedders.
+The Flutter implementation reproduces the complete sample in one Dart application. It uses Cupertino widgets to stay close to the iOS-oriented reference, while the same code runs through Flutter’s iOS and Android embedders (with web/desktop runners available in-package).
 
 **Strengths**
 
-- One implementation for both required mobile platforms.
+- One implementation for multi-platform delivery—not two native product trees.
 - Shared UI, state, animation, navigation, and product logic.
 - Feature changes do not require parallel Swift and Kotlin rewrites.
-- Consistent widget and testing model across platforms.
+- Consistent widget and testing model across targets.
 - Hot reload supports rapid UI iteration while preserving current state. [Flutter hot reload](https://docs.flutter.dev/tools/hot-reload)
+- First-party path beyond two mobiles when product scope grows. [Flutter supported platforms](https://docs.flutter.dev/reference/supported-platforms)
 - Native capability remains available through plugins, platform channels, and host code.
 
 **Trade-offs**
@@ -138,9 +139,9 @@ The Flutter implementation reproduces the complete sample in one Dart applicatio
 - Platform conventions must be designed deliberately rather than assumed.
 - iOS and Android release toolchains are still required.
 - Plugin quality and native SDK compatibility must be evaluated for platform-specific features.
-- The current demo needs explicit Flutter semantics before making accessibility claims.
+- Accessibility coverage should keep expanding beyond the home catalogue as screens grow.
 
-**Best use here:** authoritative implementation when the same product must support iOS and Android.
+**Best use here:** authoritative implementation when the product must develop and deploy on multiple platforms.
 
 ## Architecture and State
 
@@ -223,7 +224,7 @@ The Flutter strategy reduces duplicate product work. It does not halve every cos
 | Platform release work | Required twice | Still required twice |
 | Primary product ownership | Split between two apps | Consolidated in one app |
 
-This consolidation is the principal reason Flutter is the preferred dual-platform solution.
+This consolidation is the principal reason Flutter is the preferred multi-platform solution.
 
 ## Accessibility and Testing
 
@@ -231,7 +232,7 @@ The current repository is useful for source comparison but does not prove comple
 
 - SwiftUI includes explicit accessibility labels and identifiers on key content.
 - Compose includes content descriptions for interactive icons, but custom semantics coverage is limited.
-- Flutter does not currently expose explicit `Semantics` widgets in the primary source.
+- Flutter includes explicit `Semantics` on key interactive controls in the primary source; continue expanding coverage as samples grow.
 - Android contains template unit and instrumented tests; no product-flow tests were found.
 - No SwiftUI product tests or Flutter widget tests were found.
 
@@ -268,12 +269,12 @@ Performance is therefore a validation responsibility, not a reason to maintain d
 |---|---|---|---|
 | iOS-only delivery | **Best fit** | Not applicable | Viable, but adds a cross-platform layer |
 | Android-only delivery | Not applicable | **Best fit** | Viable, but adds a cross-platform layer |
-| Combined iOS and Android delivery | Requires Compose counterpart | Requires SwiftUI counterpart | **Best fit** |
-| Shared feature implementation across iOS and Android | Not by itself | Not by itself | **Yes** |
+| Multi-platform develop & deploy | Requires Compose counterpart | Requires SwiftUI counterpart | **Best fit** |
+| Shared feature implementation across platforms | Not by itself | Not by itself | **Yes** |
 | Native platform access | Direct | Direct | Available through plugins/channels/host code |
 | Default platform fidelity | Apple-native | Android-native | Requires deliberate adaptation |
 | Feature-parity effort | High across two apps | High across two apps | **Low for shared code** |
-| Repository role | Native iOS reference | Native Android reference | **Preferred shared implementation** |
+| Repository role | Native iOS reference | Native Android reference | **Preferred multi-platform implementation** |
 
 ### Final Decision
 
@@ -281,7 +282,7 @@ Use:
 
 - **SwiftUI** when the requirement is iOS only.
 - **Jetpack Compose** when the requirement is Android only.
-- **Flutter** when the requirement includes both iOS and Android.
+- **Flutter** when the requirement is to develop and deploy on multiple platforms.
 
 If a Flutter feature needs a platform-specific API, add the smallest required Swift or Kotlin integration behind a clear boundary. Do not duplicate the complete feature in both native applications unless a measured platform constraint makes Flutter unsuitable.
 
@@ -299,15 +300,15 @@ This repository should continue to present all three implementations because sid
 
 - Treat SwiftUI as the native iOS reference.
 - Treat Jetpack Compose as the native Android reference.
-- Treat Flutter as the recommended solution for combined iOS and Android support.
+- Treat Flutter as the recommended solution for multi-platform development and deployment.
 - Keep equivalent demo scenarios recognizable across all three ports.
 - Document deliberate platform differences instead of forcing visual identity.
 - Avoid adding production infrastructure unless it demonstrates a framework trade-off relevant to the comparison.
 
-The native ports explain what platform specialization looks like. The Flutter port demonstrates how the same product surface can be owned once and delivered to both platforms.
+The native ports explain what platform specialization looks like. The Flutter port demonstrates how the same product surface can be owned once and delivered across platforms.
 
 ## Conclusion
 
-SwiftUI is the strongest choice for an iOS-only application. Jetpack Compose is the strongest choice for an Android-only application. When both platforms are required, Flutter is the strongest overall solution for this comparison because it replaces two parallel product implementations with one shared codebase.
+SwiftUI is strongest for iOS-only. Jetpack Compose is strongest for Android-only. When multiple platforms must be developed and deployed, Flutter is the strongest overall solution here: one shared codebase instead of parallel native product trees.
 
-That recommendation is not based on Flutter being universally more native, faster, or simpler in every situation. It is based on architecture and delivery economics: one feature source, one state model, one primary test surface, and focused native integration where necessary. The SwiftUI and Compose implementations remain valuable as native references; Flutter should be the default implementation for shared iOS and Android work.
+That recommendation is not based on Flutter being universally more native, faster, or simpler in every situation. It is based on architecture and delivery economics: one feature source, one state model, one primary test surface, and focused native integration where necessary. The SwiftUI and Compose implementations remain valuable as native references; Flutter should be the default implementation for multi-platform work.

@@ -1,11 +1,11 @@
 {
-    "name": "flutter_conversation_project",
-    "short_name": "flutter_conversation_project",
+    "name": "Flutter Samples",
+    "short_name": "Flutter Samples",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Shared Flutter UI samples demonstrating multi-platform delivery for the iOS / Android / Flutter comparison.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
